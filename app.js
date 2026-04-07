@@ -572,52 +572,68 @@ function saveLoveLetter() {
    16.  COUNTDOWN
 ──────────────────────────────────────────── */
 function showCountdown() { showScreen('screenCountdown'); renderCountdown(); }
-
+ 
 function renderCountdown() {
-  var startDate   = localStorage.getItem(LS.startDate);
-  var specialDate = localStorage.getItem(LS.specialDate);
-  var specialLbl  = localStorage.getItem(LS.specialLabel) || 'Special Day 🎉';
+  // ── Hardcoded dates ──
+  var RELATION_START = '2022-01-01';   // 1 January 2022
+  var GUNGUN_BDAY    = '2007-04-09';   // 9 April 2007 (Gungun Ji ka janamdin)
+  var RELATION_END   = '2026-04-09';   // 9 April 2026 (special day)
+ 
+  var startDate   = localStorage.getItem(LS.startDate)   || RELATION_START;
+  var specialDate = localStorage.getItem(LS.specialDate) || RELATION_END;
+  var specialLbl  = localStorage.getItem(LS.specialLabel)|| 'Gungun Ji ka Janamdin 🎂';
   var now = new Date();
-
-  // Days together
+ 
+  // ── Days Together ──
   var dtEl = document.getElementById('daysTogether');
-  if (startDate) {
-    var days = Math.floor((now - new Date(startDate)) / 86400000);
-    dtEl.textContent = days >= 0 ? days : 0;
-  } else {
-    dtEl.textContent = '?';
+  var relStart = new Date(startDate);
+  var relEnd   = new Date(RELATION_END);
+  // Agar aaj relation end date ke baad hai, total days dikhao
+  var countUpto = now < relEnd ? now : relEnd;
+  var days = Math.floor((countUpto - relStart) / 86400000);
+  dtEl.textContent = days >= 0 ? days : 0;
+ 
+  // ── Gungun Ji ki Age ──
+  var ageEl = document.getElementById('gungunAge');
+  if (ageEl) {
+    var bday = new Date(GUNGUN_BDAY);
+    var age  = now.getFullYear() - bday.getFullYear();
+    var bm   = now.getMonth() - bday.getMonth();
+    if (bm < 0 || (bm === 0 && now.getDate() < bday.getDate())) age--;
+    ageEl.textContent = age;
   }
-
+ 
   var grid = document.getElementById('countdownGrid');
   grid.innerHTML = '';
-
+ 
   if (specialDate) {
     var target = new Date(specialDate); target.setHours(0, 0, 0, 0);
     var diff = Math.max(0, target - now);
     var d2 = Math.floor(diff / 86400000);
     var h  = Math.floor((diff % 86400000) / 3600000);
-    var m  = Math.floor((diff % 3600000) / 60000);
-    var s  = Math.floor((diff % 60000) / 1000);
-
+    var m  = Math.floor((diff % 3600000)  / 60000);
+    var s  = Math.floor((diff % 60000)    / 1000);
+ 
     var lbl = document.createElement('div');
     lbl.style.cssText = 'grid-column:1/-1;font-size:13px;color:rgba(255,200,150,.8);margin-bottom:4px;';
-    lbl.textContent = 'Countdown to ' + specialLbl;
+    lbl.textContent = diff > 0
+      ? 'Countdown to ' + specialLbl
+      : '🎉 ' + specialLbl + ' aa gaya! 🎉';
     grid.appendChild(lbl);
-
-    [{ v: d2, l: 'Days' }, { v: h, l: 'Hours' }, { v: m, l: 'Mins' }, { v: s, l: 'Secs' }]
-      .forEach(function (u) {
-        var box = document.createElement('div'); box.className = 'cd-box';
-        box.innerHTML = '<div class="cd-num">' + String(u.v).padStart(2, '0') +
-          '</div><div class="cd-label">' + u.l + '</div>';
-        grid.appendChild(box);
-      });
-    setTimeout(renderCountdown, 1000);
-  } else {
-    grid.innerHTML = '<div style="color:rgba(255,255,255,.3);font-size:13px;padding:8px;grid-column:1/-1">' +
-      'Set a special date in Admin ⚙</div>';
+ 
+    if (diff > 0) {
+      [{ v: d2, l: 'Days' }, { v: h, l: 'Hours' }, { v: m, l: 'Mins' }, { v: s, l: 'Secs' }]
+        .forEach(function (u) {
+          var box = document.createElement('div'); box.className = 'cd-box';
+          box.innerHTML = '<div class="cd-num">' + String(u.v).padStart(2, '0') +
+            '</div><div class="cd-label">' + u.l + '</div>';
+          grid.appendChild(box);
+        });
+      setTimeout(renderCountdown, 1000);
+    }
   }
 }
-
+ 
 function saveCountdownDates() {
   var sd  = document.getElementById('startDateInput').value;
   var spd = document.getElementById('specialDateInput').value;
