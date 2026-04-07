@@ -695,7 +695,7 @@ function closeAdminModal() { document.getElementById('adminModal').style.display
 function verifyAdmin() {
   var pw = document.getElementById('adminPwInput').value;
   if (pw !== state.adminPass) {
-    document.getElementById('adminErr').textContent = 'Wrong password. Default: admin123';
+    document.getElementById('adminErr').textContent = 'Wrong password. Default: 542007';
     return;
   }
   document.getElementById('adminModal').style.display = 'none';
