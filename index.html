@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>For My Lovely Cutie Pie ❤️</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<canvas id="sparkleCanvas"></canvas>
+<audio id="bgMusic" loop><source src="prem.mpeg" type="audio/mpeg"></audio>
+<div class="heart-bg" id="heartBg"></div>
+<div id="adminLink" onclick="checkAdmin()">⚙ Admin</div>
+
+<!-- ══════════════ SCREEN 1 : LOGIN ══════════════ -->
+<div id="screenLogin" class="screen active">
+  <div class="card glow-card">
+    <div class="lock-icon">🔐</div>
+    <div class="title">Private Access</div>
+    <div class="subtitle">Made with love — enter to unlock 💕</div>
+
+    <div class="step-dots">
+      <span class="step-dot active" id="dot1"></span>
+      <span class="step-dot" id="dot2"></span>
+      <span class="step-dot" id="dot3"></span>
+    </div>
+
+    <!-- Step 1 -->
+    <div id="step1">
+      <div class="field"><input type="tel" id="phoneInput" placeholder="Enter mobile number" maxlength="10"></div>
+      <button class="btn glow-btn full" onclick="sendOtp()">Send OTP 📱</button>
+      <div class="divider">or</div>
+      <button class="gmail-btn" onclick="gmailLogin()">
+        <svg width="18" height="18" viewBox="0 0 48 48">
+          <path fill="#EA4335" d="M24 5c-5.1 0-9.5 1.8-12.9 4.7L5.7 4.4A23.6 23.6 0 0 1 24 1c5.8 0 11.2 2 15.4 5.4l-5.4 5.3A15.7 15.7 0 0 0 24 5z"/>
+          <path fill="#34A853" d="M5 24c0-2 .3-3.9.8-5.7l-5.5-4.3A23.4 23.4 0 0 0 .5 24c0 3.7.8 7.2 2.4 10.3l5.3-5.3A15.6 15.6 0 0 1 5 24z"/>
+          <path fill="#4A90D9" d="M24 43a19 19 0 0 1-11.7-4L7 44.3A23.5 23.5 0 0 0 24 47c6.4 0 12.2-2.4 16.5-6.4l-5.2-5a15.7 15.7 0 0 1-11.3 4.4z"/>
+          <path fill="#FBBC05" d="M43 24c0-1.4-.1-2.7-.4-4H24v8h10.8a9.2 9.2 0 0 1-4 6l5.2 5C39.7 35.6 43 30.2 43 24z"/>
+        </svg>
+        Continue with Gmail
+      </button>
+      <div class="error" id="err1"></div>
+    </div>
+
+    <!-- Step 2 -->
+    <div id="step2" style="display:none">
+      <p class="hint-text">Enter the 6-digit OTP sent to your mobile</p>
+      <div class="otp-box" id="otpBoxes"></div>
+      <div class="success-msg">demo:123456</div>
+      <button class="btn glow-btn full" style="margin-top:16px" onclick="verifyOtp()">Verify OTP ✓</button>
+      <button class="back-btn" onclick="goStep(1)">← Back</button>
+      <div class="error" id="err2"></div>
+    </div>
+
+    <!-- Step 3 -->
+    <div id="step3" style="display:none">
+      <p class="hint-text">Enter the secret love password 💕</p>
+      <div class="pw-wrap field">
+        <input type="password" id="pwInput" placeholder="Secret password...">
+        <span class="eye-btn" onclick="togglePw()">👁</span>
+      </div>
+      <div class="success-msg" style="margin-bottom:12px">Hint: your name + 143</div>
+      <button class="btn glow-btn full" onclick="verifyPass()">Open With Love 💖</button>
+      <div class="error" id="err3"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ SCREEN 2 : PROPOSAL ══════════════ -->
+<div id="screenProposal" class="screen">
+  <div class="card proposal-card glow-card">
+    <div class="queen-avatar">
+      <img src="gungun.jpeg" alt="My Queen"
+        onerror="this.parentElement.outerHTML='<div class=&quot;queen-avatar-fallback&quot;>👸</div>'">
+    </div>
+    <h1 class="queen-name">Hey My Queen ❤️</h1>
+    <p class="proposal-text">
+      You are my peace, my happiness,<br>
+      and my forever,i want each second. 💖<br><br>
+      I choose you today,<br>tomorrow and always like ever second we need to survive.<br><br>
+      <strong style="color:#ff4e8b">Will you stay mine forever?</strong>
+    </p>
+    <div class="proposal-btns" id="proposalBtns">
+      <button class="yes-btn" onclick="sayYes()">Yes, Always 💍</button>
+      <button class="no-btn" id="noBtn"
+        onmouseover="moveNo()" ontouchstart="moveNo()" onclick="moveNo()">No 💔</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ SCREEN 3 : BIRTHDAY ══════════════ -->
+<div id="screenBday" class="screen">
+  <div class="confetti" id="confettiBox"></div>
+  <div class="card bday-card glow-card">
+    <div class="bday-emoji">🎂</div>
+    <div class="bday-title">🎉 Happy Birthday misses 🎉</div>
+    <div class="bday-name">Miss Gungun Ji</div>
+    <div class="bday-sub">Also Happy birthday madam</div>
+    <div id="bdayTyping" class="typing-text bday-letter"></div>
+    <p class="happy-q">Are you happy today? 🌸</p>
+    <div class="bday-actions">
+      <button class="btn glow-btn" onclick="showGallery()">Yes, So Happy! 🥰</button>
+      <button class="btn-ghost" onclick="showSorry()">I'm a bit sad... 🥺</button>
+    </div>
+    <div class="bday-extra">
+      <button class="btn-ghost sm" onclick="showLoveLetter()">💌 Love Letter</button>
+      <button class="btn-ghost sm" onclick="showCountdown()">⏳ Countdown</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ SCREEN 4 : GALLERY ══════════════ -->
+<div id="screenGallery" class="screen gallery-screen">
+  <h2 class="gallery-title">Our Memories 🌸</h2>
+  <p class="gallery-sub">Tap a photo to view fullscreen ✨</p>
+  <div class="gallery-grid" id="galleryGrid"></div>
+  <button class="btn-ghost" style="margin:24px 0 40px" onclick="showScreen('screenBday')">← Go Back</button>
+</div>
+
+<!-- ══════════════ SCREEN 5 : SORRY ══════════════ -->
+<div id="screenSorry" class="screen">
+  <div class="card sorry-card glow-card">
+    <div style="font-size:48px;margin-bottom:12px">💌</div>
+    <div class="title">A Letter For You...</div>
+    <div class="sorry-letter">
+      <p id="sorryTyping" class="typing-text"></p>
+    </div>
+    <button class="btn glow-btn full" onclick="showGallery()">I feel better now 💕</button>
+  </div>
+</div>
+
+<!-- ══════════════ SCREEN 6 : LOVE LETTER ══════════════ -->
+<div id="screenLoveLetter" class="screen">
+  <div class="card love-letter-card glow-card">
+    <div class="float-emoji">💖</div>
+    <div class="title playfair">A Letter From My Heart</div>
+    <div class="love-letter-paper">
+      <p id="loveLetterTyping" class="typing-text playfair"></p>
+    </div>
+    <button class="btn glow-btn full" style="margin-top:16px" onclick="showScreen('screenBday')">← Go Back 💕</button>
+  </div>
+</div>
+
+<!-- ══════════════ SCREEN 7 : COUNTDOWN ══════════════ -->
+<div id="screenCountdown" class="screen">
+  <div class="card glow-card" style="max-width:440px;text-align:center">
+    <div class="float-emoji">⏳</div>
+    <div class="title playfair">Our Special Days</div>
+    <div class="subtitle">Every moment with you is precious 💕</div>
+    <div class="days-together-box">
+      <div class="days-num" id="daysTogether">?</div>
+      <div class="days-label">Days Together 💑</div>
+    </div>
+    <div class="countdown-grid" id="countdownGrid"></div>
+    <button class="btn-ghost" style="margin-top:20px" onclick="showScreen('screenBday')">← Go Back</button>
+  </div>
+</div>
+
+<!-- ══════════════ SCREEN 8 : ADMIN ══════════════ -->
+<div id="screenAdmin" class="screen admin-screen">
+  <div class="admin-panel">
+
+    <div class="admin-header">
+      <div>
+        <div class="admin-title">Admin Dashboard 🛡️</div>
+        <div class="admin-sub">Manage your love website</div>
+      </div>
+      <button class="logout-btn" onclick="showScreen('screenLogin')">Logout →</button>
+    </div>
+
+    <!-- Stats -->
+    <div class="stat-row">
+      <div class="stat-card"><div class="stat-num" id="statImgs">0</div><div class="stat-label">Photos Added</div></div>
+      <div class="stat-card"><div class="stat-num" id="statVisits">1</div><div class="stat-label">Times Opened</div></div>
+    </div>
+
+    <!-- Upload -->
+    <div class="admin-section">
+      <h3>📸 Upload Photos</h3>
+      <div class="upload-area" id="uploadArea" onclick="document.getElementById('imgUpload').click()">
+        <div style="font-size:32px;margin-bottom:8px">📁</div>
+        <div style="font-size:15px;margin-bottom:4px">Click or Drag & Drop photos</div>
+        <div style="font-size:12px">JPG, PNG, WEBP — stored permanently in browser</div>
+      </div>
+      <input type="file" id="imgUpload" multiple accept="image/*" style="display:none" onchange="uploadImages(event)">
+
+      <!-- Loading indicator -->
+      <div id="uploadProgress" style="display:none;text-align:center;padding:10px;color:#ff99c8;font-size:13px">
+        ⏳ Saving photos to memory...
+      </div>
+
+      <div id="reorderHint" style="display:none;font-size:12px;color:rgba(255,200,150,0.7);margin-top:8px;text-align:center">
+        ↕ Drag thumbnails below to reorder
+      </div>
+      <div class="img-preview-grid" id="adminImgGrid">
+        <div class="no-photos-msg">No photos yet. Upload above.</div>
+      </div>
+      <button class="btn-ghost full sm-btn" onclick="clearAllPhotos()">🗑️ Clear All Photos</button>
+    </div>
+
+    <!-- Countdown settings -->
+    <div class="admin-section">
+      <h3>⏳ Countdown Settings</h3>
+      <label class="field-label">Relationship Start Date</label>
+      <input type="date" id="startDateInput" class="field-input">
+      <label class="field-label">Next Special Date</label>
+      <input type="date" id="specialDateInput" class="field-input">
+      <label class="field-label">Label for Special Date</label>
+      <input type="text" id="specialDateLabel" placeholder="e.g. Her Birthday 🎂" class="field-input">
+      <button class="btn full" style="padding:12px" onclick="saveCountdownDates()">Save Dates 💾</button>
+      <div class="success-msg" id="countdownSuccess"></div>
+    </div>
+
+    <!-- Love letter -->
+    <div class="admin-section">
+      <h3>💌 Love Letter</h3>
+      <textarea id="loveLetterInput" class="love-textarea" placeholder="Write your love letter here..."></textarea>
+      <button class="btn full" style="padding:12px;margin-top:10px" onclick="saveLoveLetter()">Save Letter 💾</button>
+      <div class="success-msg" id="letterSuccess"></div>
+    </div>
+
+    <!-- Site settings -->
+    <div class="admin-section">
+      <h3>⚙️ Site Settings</h3>
+      <div class="toggle-row">
+        <div><div class="tgl-label">Music Autoplay</div><div class="tgl-sub">Play music on Yes</div></div>
+        <div class="toggle on" id="musicToggle" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="toggle-row">
+        <div><div class="tgl-label">Heart Animations</div><div class="tgl-sub">Floating hearts</div></div>
+        <div class="toggle on" id="heartToggle" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="toggle-row">
+        <div><div class="tgl-label">Sparkle Effect ✨</div><div class="tgl-sub">Glitter cursor</div></div>
+        <div class="toggle on" id="sparkleToggle" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="toggle-row" style="border:none">
+        <div><div class="tgl-label">Birthday Confetti</div><div class="tgl-sub">Confetti on Yes</div></div>
+        <div class="toggle on" id="bdayToggle" onclick="this.classList.toggle('on')"></div>
+      </div>
+    </div>
+
+    <!-- Passwords -->
+    <div class="admin-section">
+      <h3>🔑 Change Love Password</h3>
+      <div class="pw-row">
+        <input type="password" id="newPw" placeholder="New love password...">
+        <button class="btn" style="padding:12px 20px" onclick="changePw()">Save</button>
+      </div>
+      <div class="success-msg" id="pwSuccess"></div>
+    </div>
+    <div class="admin-section">
+      <h3>🛡️ Change Admin Password</h3>
+      <div class="pw-row">
+        <input type="password" id="newAdminPw" placeholder="New admin password...">
+        <button class="btn" style="padding:12px 20px" onclick="changeAdminPw()">Save</button>
+      </div>
+      <div class="success-msg" id="adminPwSuccess"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════ ADMIN MODAL ══════════════ -->
+<div id="adminModal" class="modal-overlay" style="display:none">
+  <div class="modal glow-card">
+    <div style="font-size:40px;margin-bottom:12px">🛡️</div>
+    <div class="modal-title">Admin Login</div>
+    <div class="modal-sub">Enter admin password to continue</div>
+    <input type="password" id="adminPwInput" placeholder="Admin password..."
+      class="field-input" onkeydown="if(event.key==='Enter')verifyAdmin()">
+    <div style="font-size:12px;color:rgba(255,255,255,0.3);margin-bottom:16px">Default: admin123</div>
+    <div class="modal-actions">
+      <button class="btn-ghost" style="flex:1" onclick="closeAdminModal()">Cancel</button>
+      <button class="btn glow-btn" style="flex:1" onclick="verifyAdmin()">Enter</button>
+    </div>
+    <div class="error" id="adminErr"></div>
+  </div>
+</div>
+
+<!-- ══════════════ CAPTION MODAL ══════════════ -->
+<div id="captionModal" class="modal-overlay" style="display:none">
+  <div class="modal glow-card">
+    <div style="font-size:32px;margin-bottom:10px">✏️</div>
+    <div class="modal-title">Add / Edit Caption</div>
+    <img id="captionPreviewImg" class="caption-preview">
+    <input type="text" id="captionInput" placeholder="Enter a sweet caption... 🌸" class="field-input">
+    <div class="modal-actions">
+      <button class="btn-ghost" style="flex:1" onclick="closeCaptionModal()">Cancel</button>
+      <button class="btn glow-btn" style="flex:1" onclick="saveCaption()">Save 💾</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ FULLSCREEN VIEWER ══════════════ -->
+<div id="fullscreenViewer" class="fullscreen-viewer" style="display:none">
+  <button class="fs-close" onclick="closeFullscreen()">✕</button>
+  <button class="fs-nav fs-prev" onclick="prevPhoto()">‹</button>
+  <button class="fs-nav fs-next" onclick="nextPhoto()">›</button>
+  <img id="fullscreenImg" class="fs-img">
+  <div id="fullscreenCaption" class="fs-caption"></div>
+  <div id="fullscreenCounter" class="fs-counter"></div>
+</div>
+
+<!-- ══════════════ TOAST ══════════════ -->
+<div id="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
