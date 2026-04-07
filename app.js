@@ -396,11 +396,48 @@ function startBdayTyping() {
 ──────────────────────────────────────────── */
 var defaultEmojis = ['🌸', '💕', '✨', '🎀', '👑', '💫', '🌹', '💎', '🦋', '🌙', '⭐', '💐'];
 
+var memoriesPhotos = [
+  { src: 'memories/1.jpeg',  caption: '💕' },
+  { src: 'memories/2.jpeg',  caption: '💕' },
+  { src: 'memories/3.jpeg',  caption: '💕' },
+  { src: 'memories/4.jpeg',  caption: '💕' },
+  { src: 'memories/5.jpeg',  caption: '💕' },
+  { src: 'memories/6.jpeg',  caption: '💕' },
+  { src: 'memories/7.jpeg',  caption: '💕' },
+  { src: 'memories/8.jpeg',  caption: '💕' },
+  { src: 'memories/9.jpeg',  caption: '💕' },
+  { src: 'memories/10.jpeg', caption: '💕' },
+  { src: 'memories/11.jpeg', caption: '💕' },
+  { src: 'memories/12.jpeg', caption: '💕' },
+  { src: 'memories/13.jpeg', caption: '💕' },
+  { src: 'memories/14.jpeg', caption: '💕' },
+  { src: 'memories/15.jpeg', caption: '💕' },
+  { src: 'memories/16.jpeg', caption: '💕' },
+  { src: 'memories/17.jpeg', caption: '💕' },
+  { src: 'memories/18.jpeg', caption: '💕' },
+  { src: 'memories/19.jpeg', caption: '💕' },
+  { src: 'memories/20.jpeg', caption: '💕' },
+  { src: 'memories/21.jpeg', caption: '💕' },
+  { src: 'memories/22.jpeg', caption: '💕' },
+  { src: 'memories/23.jpeg', caption: '💕' },
+  { src: 'memories/24.jpeg', caption: '💕' },
+  { src: 'memories/25.jpeg', caption: '💕' },
+  { src: 'memories/26.jpeg', caption: '💕' },
+  { src: 'memories/27.jpeg', caption: '💕' }
+];
+
 function showGallery() {
   showScreen('screenGallery');
-  dbGetAllPhotos(function (rows) {
-    photoCache = rows;
-    renderGallery(rows);
+  dbGetAllPhotos(function (dbRows) {
+    var folderRows = memoriesPhotos.map(function (p, i) {
+      return { id: 'f_' + i, src: p.src, caption: p.caption, order: i };
+    });
+    var combined = folderRows.concat(dbRows.map(function (r, i) {
+      r.order = folderRows.length + i;
+      return r;
+    }));
+    photoCache = combined;
+    renderGallery(combined);
   });
 }
 
